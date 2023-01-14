@@ -1,7 +1,7 @@
 -- SQL script that creates a stored procedure ComputeAverageWeightedScoreForUser
 -- that computes and store the average weighted score for a student.
 
-DROP PROCEDURE IF EXISTS ComputeAverageWeightedScoreForUser;
+-- DROP PROCEDURE IF EXISTS ComputeAverageWeightedScoreForUser;
 DELIMITER $$
 CREATE PROCEDURE ComputeAverageWeightedScoreForUser(IN user_id INT)
 BEGIN
@@ -18,7 +18,7 @@ BEGIN
 
     getAvgWeight: LOOP
         -- FETCH values in each row and store them
-        FETCH curs_1 INTO pro_id, scor;
+        FETCH NEXT FROM curs_1 INTO pro_id, scor;
 
         IF (done_l = 1)
         THEN
@@ -43,5 +43,6 @@ BEGIN
     WHERE users.id = user_id;
 
     CLOSE curs_1;
-END $$
+END ;
+
 DELIMITER ;
