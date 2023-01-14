@@ -3,7 +3,7 @@
 
 DROP PROCEDURE IF EXISTS AddBonus;
 DELIMITER $$
-CREATE PROCEDURE IF NOT EXISTS AddBonus(IN user_id INT, IN project_name VARCHAR(255), IN score INT)
+CREATE PROCEDURE AddBonus(IN user_id INT, IN project_name VARCHAR(255), IN score INT)
 BEGIN
     DECLARE proid INT;
 
