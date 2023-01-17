@@ -12,6 +12,6 @@ def update_topics(mongo_collection, name, topics):
     if not name or not topics:
         return
 
-    mongo_collection.update_one({'name': name}, {
+    mongo_collection.update_many({'name': name}, {
         '$set': {'topics': topics}
         }, upsert=True)
