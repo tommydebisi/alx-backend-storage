@@ -14,7 +14,7 @@ class Cache:
     def __init__(self) -> None:
         """ constructor function """
         self._redis = redis.Redis()
-        self._redis.flushdb(asynchronous=True)
+        self._redis.flushdb()
 
     def store(self, data: Union[bytes, str, int, float]) -> str:
         """
