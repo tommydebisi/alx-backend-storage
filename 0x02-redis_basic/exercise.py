@@ -21,6 +21,7 @@ class Cache:
             takes a data storing it with a unique id and returning
             the key
         """
-        key = uuid.uuid4()
-        self._redis.set(str(key), data)
-        return str(key)
+        if data:
+            key = uuid.uuid4()
+            self._redis.set(str(key), data)
+            return str(key)
