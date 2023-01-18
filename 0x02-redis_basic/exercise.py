@@ -7,7 +7,7 @@ from typing import Union, Callable, Optional
 import uuid
 
 
-ReturnData = Union[bytes, str, int, float]
+ReturnData = Union[str, bytes, int, float]
 class Cache:
     """
         Class that caches input to redis server
