@@ -13,8 +13,8 @@ class Cache:
     """
     def __init__(self) -> None:
         """ constructor function """
-        self.__redis = redis.Redis(host='localhost', port=6379)
-        self.__redis.flushdb()
+        self._redis = redis.Redis()
+        self._redis.flushdb(asynchronous=True)
 
     def store(self, data: Union[bytes, str, int, float]) -> str:
         """
@@ -23,5 +23,5 @@ class Cache:
         """
         if data:
             key = uuid.uuid4()
-            self.__redis.set(str(key), data)
+            self._redis.set(str(key), data)
             return str(key)
