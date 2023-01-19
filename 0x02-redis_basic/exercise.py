@@ -5,9 +5,21 @@
 import redis
 from typing import Union, Callable, Optional
 import uuid
+from functools import wraps
 
 
 ReturnData = Union[str, bytes, int, float]
+
+
+def count_calls(method: Callable) -> Callable:
+    @wraps(method)
+    def inner(self, *args, **kwargs):
+        key = method.__qualname__
+        self._redis.incr(key, 1)
+        return method(self, *args, **kwargs)
+    return inner
+
+
 class Cache:
     """
         Class that caches input to redis server
@@ -17,6 +29,7 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
+    @count_calls
     def store(self, data: ReturnData) -> str:
         """
             takes a data storing it with a unique id and returning
@@ -27,7 +40,7 @@ class Cache:
         self._redis.set(key, data)
         return key
 
-    def get(self, key: str, fn: Optional[Callable]=None) -> ReturnData:
+    def get(self, key: str, fn: Optional[Callable] = None) -> ReturnData:
         """
             returns the value goten from the key in database
         """
