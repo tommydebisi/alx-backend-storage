@@ -39,6 +39,28 @@ def call_history(method: Callable) -> Callable:
     return inner
 
 
+def replay(method):
+    """
+        display the history of calls of a particular function.
+    """
+    db_instance = redis.Redis()
+    meth_name = method.__qualname__
+
+    # get val associated wwith meth_name
+    bs = db_instance.get(meth_name)
+
+    if not bs:
+        return
+
+    print("{} was called {} times:".format(meth_name, bs.decode("utf-8")))
+
+    input_list = db_instance.lrange(f"{meth_name}:inputs", 0, -1)
+    output_list = db_instance.lrange(f"{meth_name}:outputs", 0, -1)
+
+    for inp, out in zip(input_list, output_list):
+        print(f"{meth_name}(*{inp.decode('utf-8')}) -> {out.decode('utf-8')}")
+
+
 class Cache:
     """
         Class that caches input to redis server
