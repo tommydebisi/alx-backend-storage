@@ -12,11 +12,30 @@ ReturnData = Union[str, bytes, int, float]
 
 
 def count_calls(method: Callable) -> Callable:
+    """ decorator function for cache class that counts calls """
     @wraps(method)
     def inner(self, *args, **kwargs):
         key = method.__qualname__
         self._redis.incr(key, 1)
         return method(self, *args, **kwargs)
+    return inner
+
+
+def call_history(method: Callable) -> Callable:
+    """
+        tore the history of inputs and outputs for a particular function
+    """
+    @wraps(method)
+    def inner(self, *args):
+        key_in = "{}:inputs".format(method.__qualname__)
+        key_out = "{}:outputs".format(method.__qualname__)
+
+        id_str = method(self, *args)
+
+        # storing the input and output args
+        self._redis.rpush(key_in, str(args))
+        self._redis.rpush(key_out, id_str)
+        return id_str
     return inner
 
 
@@ -29,6 +48,7 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
+    @call_history
     @count_calls
     def store(self, data: ReturnData) -> str:
         """
