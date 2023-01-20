@@ -31,5 +31,5 @@ if __name__ == '__main__':
         }}, {"$sort": {"ip_count": -1}}, {"$limit": 10}
     ]
     for item in collection.aggregate(aggr_list):
-        print("\t{}:{}".format(item.get("_id"),
+        print("\t{}: {}".format(item.get("_id"),
                                item.get("ip_count")))
